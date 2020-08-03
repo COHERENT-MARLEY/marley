@@ -95,7 +95,9 @@ finalNuclearRecoilHist=ROOT.TH1D("finalNuclearRecoilHist",";Recoil Energy(keVnr)
 leptonAngleHist=ROOT.TH1D("leptonAngleHist",";Angle (degrees);Counts",90,0,180)
 leptonAngleNeutrinoEnergyHist=ROOT.TH2D("leptonAngleNeutrinoEnergyHist",";Angle (degrees);Neutrino Energy (MeV)",90,0,180,53,0,53)
 leptonAngleLeptonEnergyHist=ROOT.TH2D("leptonAngleLeptonEnergyHist",";Angle (degrees);Lepton Energy (MeV)",90,0,180,53,0,53)
-leptonAngleLeptonEnergyHistRadians=ROOT.TH2D("leptonAngleLeptonEnergyHistRadians",";cos#theta;#omega (MeV);Cross Section (x 10^{-42}cm^{2})",20,-1,1,53,0,53)
+leptonAngleLeptonEnergyHistRadians=ROOT.TH2D("leptonAngleLeptonEnergyHistRadians",";cos#theta;Lepton Energy (MeV);Cross Section (x 10^{-42}cm^{2})",20,-1,1,53,0,53)
+leptonAngleExcitationEnergyHist=ROOT.TH2D("leptonAngleExcitationEnergyHist",";Angle (degrees);Excitation Energy (MeV)",90,0,180,53,0,53)
+leptonAngleExcitationEnergyHistRadians=ROOT.TH2D("leptonAngleExcitationEnergyHistRadians",";cos#theta;#omega (MeV);Cross Section (x 10^{-42}cm^{2})",20,-1,1,53,0,53)
 singleNeutronAngleHist=ROOT.TH1D("singleNeutronAngleHist",";Angle (degrees);Counts",90,0,180)
 singleNeutronAngleNeutrinoEnergyHist=ROOT.TH2D("singleNeutronAngleNeutrinoEnergyHist",";Angle (degrees);Neutrino Energy (MeV)",90,0,180,53,0,53)
 singleNeutronAngleNeutronEnergyHist=ROOT.TH2D("singleNeutronAngleNeutronEnergyHist",";Angle (degrees);Neutron Energy (MeV)",90,0,180,10,0,10)
@@ -274,6 +276,9 @@ for i,line in enumerate(inpFile):
   #See if this is the last final particle. If so, we can update hists
   if nFinalParticles==0:
    
+    leptonAngleExcitationEnergyHist.Fill(leptonOpeningAngle[0],excitationEnergy[0])
+    leptonAngleExcitationEnergyHistRadians.Fill(numpy.cos(leptonOpeningAngle[0]*math.pi/180.),excitationEnergy[0])
+   
     marleyTree.Fill()
     finalNuclearRecoilEnergy[0]=0
     finalNuclearState[0]=0
@@ -353,6 +358,7 @@ doubleNeutronEnergies2D.Write()
 leptonAngleHist.Write()
 leptonAngleNeutrinoEnergyHist.Write()
 leptonAngleLeptonEnergyHist.Write()
+leptonAngleExcitationEnergyHist.Write()
 singleNeutronAngleHist.Write()
 singleNeutronAngleNeutrinoEnergyHist.Write()
 singleNeutronAngleNeutronEnergyHist.Write()
@@ -440,7 +446,13 @@ if oldFormat==0:
     normalizedLeptonAngleLeptonEnergyHistRadians.Scale(leptonCrossSection/normalizedLeptonAngleLeptonEnergyHistRadians.GetEntries())
     normalizedLeptonAngleLeptonEnergyHistRadians.Scale(100.) #So 10^-42 not 10^-40
     normalizedLeptonAngleLeptonEnergyHistRadians.Write()
-
+    
+  normalizedLeptonAngleExcitationEnergyHistRadians=leptonAngleExcitationEnergyHistRadians.Clone("normalizedLeptonAngleExcitationEnergyHistRadians")
+  if normalizedLeptonAngleExcitationEnergyHistRadians.GetEntries()>0:
+    normalizedLeptonAngleExcitationEnergyHistRadians.Scale(leptonCrossSection/normalizedLeptonAngleExcitationEnergyHistRadians.GetEntries())
+    normalizedLeptonAngleExcitationEnergyHistRadians.Scale(100.) #So 10^-42 not 10^-40
+    normalizedLeptonAngleExcitationEnergyHistRadians.Write()
+  
   normalizedFinalNucleiHist=finalNucleiHist.Clone("normalizedFinalNucleiHist")
   if normalizedFinalNucleiHist.GetEntries()>0:
     normalizedFinalNucleiHist.Scale(leptonCrossSection/normalizedFinalNucleiHist.GetEntries())
