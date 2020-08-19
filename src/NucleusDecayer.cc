@@ -113,6 +113,14 @@ void marley::NucleusDecayer::process_event( marley::Event& event,
   auto* ds = gen.get_structure_db().get_decay_scheme( initial_residue_pdg );
   double unbound_threshold = mt.unbound_threshold( initial_residue_pdg );
 
+  //Check if the unbound threshold is larger than the largest structure energy.
+  //If so, set unbound threshold to the largest structure energy.
+  marley::Level* lev_for_checking_unbound_threshold = ds->get_max_level();
+  double max_level_energy = lev_for_checking_unbound_threshold->energy();
+  if ( max_level_energy < unbound_threshold ) {
+    unbound_threshold = max_level_energy;
+  }
+
   // If Reaction::set_level_ptrs() changes, you'll want to change this too.
   // TODO: find a better way of keeping the two pieces of code in sync
   bool continuum = ( Ex > unbound_threshold ) || ( !ds );

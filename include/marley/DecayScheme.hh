@@ -72,6 +72,9 @@ namespace marley {
       /// objects
       marley::Level* get_pointer_to_closest_level(double E_level);
 
+      /// @brief Returns max level of the decay scheme
+      marley::Level* get_max_level() const;
+
       /// @brief Simulates nuclear de-excitation via &gamma;-ray emission(s)
       /// @details Gamma-rays will be randomly emitted until the nucleus
       /// reaches its ground state.

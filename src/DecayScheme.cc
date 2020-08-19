@@ -68,6 +68,11 @@ int marley::DecayScheme::pdg() const {
   return marley_utils::get_nucleus_pid( Z_, A_ );
 }
 
+marley::Level* marley::DecayScheme::get_max_level() const {
+  // Return a pointer to the max level, assumes levels are sorted
+  return levels_.at(levels_.size()-1).get();
+}
+
 void marley::DecayScheme::do_cascade(marley::Level& initial_level,
   marley::Event& event, marley::Generator& gen, int qIon)
 {

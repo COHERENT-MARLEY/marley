@@ -94,6 +94,14 @@ namespace {
     const auto& mt = marley::MassTable::Instance();
     double unbound_threshold = mt.unbound_threshold( pdg_d );
 
+    //Check if the unbound threshold is larger than the largest structure energy.
+    //If so, set the unbound threshold to the largest structure energy
+    marley::Level* lev_for_checking_unbound_threshold = ds->get_max_level();
+    double max_level_energy = lev_for_checking_unbound_threshold->energy();
+    if ( max_level_energy < unbound_threshold ) {
+      unbound_threshold = max_level_energy;
+    }
+
     // Get the spin-parity of the ground state of the initial nucleus.
     // This will be used below to check the matchups between MatrixElement and
     // Level objects based on spin-parity selection rules.
